@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:myport4lio/core/constants/app_colors.dart';
 import 'package:myport4lio/core/service_locator.dart';
 import 'package:myport4lio/features/developer/bloc/developer_bloc.dart';
@@ -11,6 +10,7 @@ import 'package:myport4lio/features/project_details/bloc/project_details_bloc.da
 import 'package:myport4lio/features/projects/bloc/projects_bloc.dart';
 import 'package:myport4lio/routes/app_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Константы для подключения к сервисам
 const String supabaseUrl = 'https://oafjxciedawpsmilkrqz.supabase.co';

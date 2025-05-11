@@ -1,31 +1,49 @@
 import 'package:equatable/equatable.dart';
 import 'package:myport4lio/core/models/developer_info.dart';
 
-enum DeveloperStatus { initial, loading, loaded, error }
+sealed class DeveloperState extends Equatable {
+  const DeveloperState();
 
-class DeveloperState extends Equatable {
-  final DeveloperStatus status;
-  final DeveloperInfo? developerInfo;
-  final String? errorMessage;
-  
-  const DeveloperState({
-    this.status = DeveloperStatus.initial,
-    this.developerInfo,
-    this.errorMessage,
-  });
-  
   @override
-  List<Object?> get props => [status, developerInfo, errorMessage];
-  
-  DeveloperState copyWith({
-    DeveloperStatus? status,
-    DeveloperInfo? developerInfo,
-    String? errorMessage,
+  List<Object?> get props => [];
+
+  T when<T>({
+    required T Function() initial,
+    required T Function() loading,
+    required T Function(DeveloperInfo developerInfo) loaded,
+    required T Function(String message) error,
   }) {
-    return DeveloperState(
-      status: status ?? this.status,
-      developerInfo: developerInfo ?? this.developerInfo,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
+    return switch (this) {
+      DeveloperInitial() => initial(),
+      DeveloperLoading() => loading(),
+      DeveloperLoaded(developerInfo: final info) => loaded(info),
+      DeveloperError(message: final msg) => error(msg),
+    };
   }
+}
+
+class DeveloperInitial extends DeveloperState {
+  const DeveloperInitial();
+}
+
+class DeveloperLoading extends DeveloperState {
+  const DeveloperLoading();
+}
+
+class DeveloperLoaded extends DeveloperState {
+  final DeveloperInfo developerInfo;
+
+  const DeveloperLoaded(this.developerInfo);
+
+  @override
+  List<Object?> get props => [developerInfo];
+}
+
+class DeveloperError extends DeveloperState {
+  final String message;
+
+  const DeveloperError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 } 

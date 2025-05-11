@@ -18,7 +18,7 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.router.push(ProjectDetailsRoute(projectId: project.id)),
+      onTap: () => context.router.push(ProjectDetailsRoute(projectId: project.id.toString())),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.background,

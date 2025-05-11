@@ -1,13 +1,14 @@
 import 'dart:developer' as developer;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myport4lio/core/repositories/projects_repository.dart';
 import 'package:myport4lio/features/project_details/bloc/project_details_event.dart';
 import 'package:myport4lio/features/project_details/bloc/project_details_state.dart';
+
+import '../../../core/repositories/projects_repository.dart';
 
 class ProjectDetailsBloc extends Bloc<ProjectDetailsEvent, ProjectDetailsState> {
   final ProjectsRepository repository;
   
-  ProjectDetailsBloc({required this.repository}) : super(const ProjectDetailsState()) {
+  ProjectDetailsBloc({required this.repository}) : super(const ProjectDetailsInitial()) {
     on<LoadProjectDetails>(_onLoadProjectDetails);
   }
   
@@ -15,24 +16,18 @@ class ProjectDetailsBloc extends Bloc<ProjectDetailsEvent, ProjectDetailsState> 
     LoadProjectDetails event,
     Emitter<ProjectDetailsState> emit,
   ) async {
-    emit(state.copyWith(status: ProjectDetailsStatus.loading));
-    
     try {
+      emit(const ProjectDetailsLoading());
       final project = await repository.getProjectById(event.projectId);
-      emit(state.copyWith(
-        status: ProjectDetailsStatus.loaded,
-        project: project,
-      ));
+      emit(ProjectDetailsLoaded(project));
     } catch (e) {
       developer.log(
-        'Ошибка при загрузке деталей проекта (ID: ${event.projectId}): $e',
+        'Ошибка при загрузке деталей проекта: $e',
         name: 'ProjectDetailsBloc',
         error: e,
       );
-      emit(state.copyWith(
-        status: ProjectDetailsStatus.error,
-        errorMessage: e.toString(),
-      ));
+
+      emit(ProjectDetailsError(e.toString()));
     }
   }
 } 

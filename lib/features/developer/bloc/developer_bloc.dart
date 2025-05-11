@@ -7,7 +7,7 @@ import 'package:myport4lio/features/developer/bloc/developer_state.dart';
 class DeveloperBloc extends Bloc<DeveloperEvent, DeveloperState> {
   final DeveloperRepository repository;
   
-  DeveloperBloc({required this.repository}) : super(const DeveloperState()) {
+  DeveloperBloc({required this.repository}) : super(const DeveloperInitial()) {
     on<LoadDeveloperInfo>(_onLoadDeveloperInfo);
     on<RefreshDeveloperInfo>(_onRefreshDeveloperInfo);
   }
@@ -16,26 +16,18 @@ class DeveloperBloc extends Bloc<DeveloperEvent, DeveloperState> {
     LoadDeveloperInfo event,
     Emitter<DeveloperState> emit,
   ) async {
-    if (state.status == DeveloperStatus.loaded) return;
-    
-    emit(state.copyWith(status: DeveloperStatus.loading));
-    
     try {
+      emit(const DeveloperLoading());
       final developerInfo = await repository.getDeveloperInfo();
-      emit(state.copyWith(
-        status: DeveloperStatus.loaded,
-        developerInfo: developerInfo,
-      ));
+      emit(DeveloperLoaded(developerInfo));
     } catch (e) {
       developer.log(
         'Ошибка при загрузке информации о разработчике: $e',
         name: 'DeveloperBloc',
         error: e,
       );
-      emit(state.copyWith(
-        status: DeveloperStatus.error,
-        errorMessage: e.toString(),
-      ));
+
+      emit(DeveloperError(e.toString()));
     }
   }
   
@@ -43,24 +35,18 @@ class DeveloperBloc extends Bloc<DeveloperEvent, DeveloperState> {
     RefreshDeveloperInfo event,
     Emitter<DeveloperState> emit,
   ) async {
-    emit(state.copyWith(status: DeveloperStatus.loading));
-    
     try {
+      emit(const DeveloperLoading());
       final developerInfo = await repository.getDeveloperInfo();
-      emit(state.copyWith(
-        status: DeveloperStatus.loaded,
-        developerInfo: developerInfo,
-      ));
+      emit(DeveloperLoaded(developerInfo));
     } catch (e) {
       developer.log(
         'Ошибка при обновлении информации о разработчике: $e',
         name: 'DeveloperBloc',
         error: e,
       );
-      emit(state.copyWith(
-        status: DeveloperStatus.error,
-        errorMessage: e.toString(),
-      ));
+
+      emit(DeveloperError(e.toString()));
     }
   }
 } 

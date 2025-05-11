@@ -1,31 +1,49 @@
 import 'package:equatable/equatable.dart';
 import 'package:myport4lio/core/models/project.dart';
 
-enum ProjectDetailsStatus { initial, loading, loaded, error }
+sealed class ProjectDetailsState extends Equatable {
+  const ProjectDetailsState();
 
-class ProjectDetailsState extends Equatable {
-  final ProjectDetailsStatus status;
-  final Project? project;
-  final String? errorMessage;
-  
-  const ProjectDetailsState({
-    this.status = ProjectDetailsStatus.initial,
-    this.project,
-    this.errorMessage,
-  });
-  
   @override
-  List<Object?> get props => [status, project, errorMessage];
-  
-  ProjectDetailsState copyWith({
-    ProjectDetailsStatus? status,
-    Project? project,
-    String? errorMessage,
+  List<Object?> get props => [];
+
+  T when<T>({
+    required T Function() initial,
+    required T Function() loading,
+    required T Function(Project project) loaded,
+    required T Function(String message) error,
   }) {
-    return ProjectDetailsState(
-      status: status ?? this.status,
-      project: project ?? this.project,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
+    return switch (this) {
+      ProjectDetailsInitial() => initial(),
+      ProjectDetailsLoading() => loading(),
+      ProjectDetailsLoaded(project: final project) => loaded(project),
+      ProjectDetailsError(message: final msg) => error(msg),
+    };
   }
+}
+
+class ProjectDetailsInitial extends ProjectDetailsState {
+  const ProjectDetailsInitial();
+}
+
+class ProjectDetailsLoading extends ProjectDetailsState {
+  const ProjectDetailsLoading();
+}
+
+class ProjectDetailsLoaded extends ProjectDetailsState {
+  final Project project;
+
+  const ProjectDetailsLoaded(this.project);
+
+  @override
+  List<Object?> get props => [project];
+}
+
+class ProjectDetailsError extends ProjectDetailsState {
+  final String message;
+
+  const ProjectDetailsError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 } 

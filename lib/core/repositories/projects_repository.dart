@@ -18,7 +18,7 @@ class ProjectsRepository extends BaseRepository {
     );
   }
   
-  Future<Project> getProjectById(int id) async {
+  Future<Project> getProjectById(String id) async {
     return safeCall(
       call: () async {
         final response = await client

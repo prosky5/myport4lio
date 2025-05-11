@@ -7,17 +7,17 @@ import 'package:myport4lio/core/constants/app_constants.dart';
 import 'package:myport4lio/core/constants/app_text_styles.dart';
 import 'package:myport4lio/features/developer/bloc/developer_bloc.dart';
 import 'package:myport4lio/features/developer/bloc/developer_state.dart';
-import 'package:myport4lio/features/home/widgets/side_menu.dart';
 import 'package:myport4lio/features/project_details/bloc/project_details_bloc.dart';
 import 'package:myport4lio/features/project_details/bloc/project_details_event.dart';
 import 'package:myport4lio/features/project_details/bloc/project_details_state.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../core/models/project.dart';
 
 @RoutePage()
 class ProjectDetailsScreen extends StatefulWidget {
-  final int projectId;
-  
+  final String projectId;
+
   const ProjectDetailsScreen({
     super.key,
     @PathParam('id') required this.projectId,
@@ -31,9 +31,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ProjectDetailsBloc>().add(LoadProjectDetails(widget.projectId));
+    context
+        .read<ProjectDetailsBloc>()
+        .add(LoadProjectDetails(widget.projectId));
   }
-  
+
   Future<void> _launchUrl(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
       if (context.mounted) {
@@ -51,191 +53,159 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: BlocBuilder<DeveloperBloc, DeveloperState>(
-        builder: (context, devState) {
-          if (devState.status == DeveloperStatus.loading) {
-            return const Center(
+        builder: (context, state) {
+          return state.when(
+            loading: () => const Center(
               child: CircularProgressIndicator(
                 color: AppColors.accent,
               ),
-            );
-          }
-          
-          final developerInfo = devState.developerInfo;
-          if (developerInfo == null) {
-            return const SizedBox.shrink();
-          }
-          
-          return ResponsiveRowColumn(
-            layout: ResponsiveBreakpoints.of(context).largerThan(TABLET)
-                ? ResponsiveRowColumnType.ROW
-                : ResponsiveRowColumnType.COLUMN,
-            rowMainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ResponsiveRowColumnItem(
-                rowFlex: 1,
-                child: SideMenu(developerInfo: developerInfo),
+            ),
+            initial: () => const SizedBox.shrink(),
+            loaded: (developerInfo) => Container(
+              color: AppColors.cardBackground,
+              child: BlocBuilder<ProjectDetailsBloc, ProjectDetailsState>(
+                builder: (context, state) {
+                  return state.when(
+                    initial: () => const SizedBox.shrink(),
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.accent,
+                      ),
+                    ),
+                    loaded: (project) => _buildContent(context, project),
+                    error: (message) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppConstants.errorTitle,
+                            style: AppTextStyles.h2,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            message ?? AppConstants.errorMessage,
+                            style: AppTextStyles.body,
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => context.router.pop(),
+                            child: const Text('Назад'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
-              ResponsiveRowColumnItem(
-                rowFlex: 3,
-                child: Container(
-                  color: AppColors.cardBackground,
-                  child: BlocBuilder<ProjectDetailsBloc, ProjectDetailsState>(
-                    builder: (context, state) {
-                      if (state.status == ProjectDetailsStatus.loading) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.accent,
-                          ),
-                        );
-                      }
-                      
-                      if (state.status == ProjectDetailsStatus.error) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                AppConstants.errorTitle,
-                                style: AppTextStyles.h2,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                state.errorMessage ?? AppConstants.errorMessage,
-                                style: AppTextStyles.body,
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () => context.router.pop(),
-                                child: const Text('Назад'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      
-                      final project = state.project;
-                      if (project == null) {
-                        return const SizedBox.shrink();
-                      }
-                      
-                      return SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Заголовок проекта
-                              Text(
-                                project.title,
-                                style: AppTextStyles.h1,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                project.description ?? "",
-                                style: AppTextStyles.subtitle,
-                              ),
-                              const SizedBox(height: 32),
-                              
-                              // Изображение проекта
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: CachedNetworkImage(
-                                  imageUrl: project.imageUrl,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 400,
-                                  placeholder: (context, url) => Container(
-                                    color: AppColors.darkBlue,
-                                    height: 400,
-                                    child: const Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.accent,
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) => Container(
-                                    color: AppColors.darkBlue,
-                                    height: 400,
-                                    child: Center(
-                                      child: Text(
-                                        project.title.substring(0, 1),
-                                        style: AppTextStyles.h1.copyWith(fontSize: 72),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 32),
-                              
-                              // Детальное описание
-                              Text(
-                                project.detailText,
-                                style: AppTextStyles.body,
-                              ),
-                              const SizedBox(height: 32),
-                              
-                              // Технологии
-                              Text(
-                                'Использованные технологии:',
-                                style: AppTextStyles.h3,
-                              ),
-                              const SizedBox(height: 16),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: project.technologies
-                                    .map((tech) => _buildTechChip(tech))
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 32),
-                              
-                              // Ссылки
-                              if (project.appUrl != null || project.githubUrl != null)
-                                Row(
-                                  children: [
-                                    if (project.appUrl != null)
-                                      ElevatedButton(
-                                        onPressed: () => _launchUrl(project.appUrl!),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppColors.accent,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 24,
-                                            vertical: 16,
-                                          ),
-                                        ),
-                                        child: const Text('Открыть проект'),
-                                      ),
-                                    const SizedBox(width: 16),
-                                    if (project.githubUrl != null)
-                                      OutlinedButton(
-                                        onPressed: () => _launchUrl(project.githubUrl!),
-                                        style: OutlinedButton.styleFrom(
-                                          side: const BorderSide(color: AppColors.accent),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 24,
-                                            vertical: 16,
-                                          ),
-                                        ),
-                                        child: const Text('GitHub'),
-                                      ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+            ),
+            error: (_) => const SizedBox.shrink(),
           );
         },
       ),
     );
   }
-  
+
+  Widget _buildContent(BuildContext context, Project project) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              project.title,
+              style: AppTextStyles.h1,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              project.description ?? "",
+              style: AppTextStyles.subtitle,
+            ),
+            const SizedBox(height: 32),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: CachedNetworkImage(
+                imageUrl: project.imageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 400,
+                placeholder: (context, url) => Container(
+                  color: AppColors.darkBlue,
+                  height: 400,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.accent,
+                    ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: AppColors.darkBlue,
+                  height: 400,
+                  child: Center(
+                    child: Text(
+                      project.title.substring(0, 1),
+                      style: AppTextStyles.h1.copyWith(fontSize: 72),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              project.detailText,
+              style: AppTextStyles.body,
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'Использованные технологии:',
+              style: AppTextStyles.h3,
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: project.technologies
+                  .map((tech) => _buildTechChip(tech))
+                  .toList(),
+            ),
+            const SizedBox(height: 32),
+            if (project.appUrl != null || project.githubUrl != null)
+              Row(
+                children: [
+                  if (project.appUrl != null)
+                    ElevatedButton(
+                      onPressed: () => _launchUrl(project.appUrl!),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.accent,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                      ),
+                      child: const Text('Открыть проект'),
+                    ),
+                  const SizedBox(width: 16),
+                  if (project.githubUrl != null)
+                    OutlinedButton(
+                      onPressed: () => _launchUrl(project.githubUrl!),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.accent),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                      ),
+                      child: const Text('GitHub'),
+                    ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildTechChip(String tech) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -251,4 +221,4 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       ),
     );
   }
-} 
+}

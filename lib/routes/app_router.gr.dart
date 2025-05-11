@@ -21,6 +21,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AboutScreen(),
       );
     },
+    AppRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AppScreen(),
+      );
+    },
     ContactsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -43,7 +49,7 @@ abstract class _$AppRouter extends RootStackRouter {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<ProjectDetailsRouteArgs>(
           orElse: () =>
-              ProjectDetailsRouteArgs(projectId: pathParams.getInt('id')));
+              ProjectDetailsRouteArgs(projectId: pathParams.getString('id')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ProjectDetailsScreen(
@@ -71,6 +77,20 @@ class AboutRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AboutRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AppScreen]
+class AppRoute extends PageRouteInfo<void> {
+  const AppRoute({List<PageRouteInfo>? children})
+      : super(
+          AppRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AppRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -122,7 +142,7 @@ class PortfolioRoute extends PageRouteInfo<void> {
 class ProjectDetailsRoute extends PageRouteInfo<ProjectDetailsRouteArgs> {
   ProjectDetailsRoute({
     Key? key,
-    required int projectId,
+    required String projectId,
     List<PageRouteInfo>? children,
   }) : super(
           ProjectDetailsRoute.name,
@@ -148,7 +168,7 @@ class ProjectDetailsRouteArgs {
 
   final Key? key;
 
-  final int projectId;
+  final String projectId;
 
   @override
   String toString() {

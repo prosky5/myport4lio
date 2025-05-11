@@ -8,101 +8,129 @@ import 'package:myport4lio/routes/app_router.dart';
 
 class SideMenu extends StatelessWidget {
   final DeveloperInfo developerInfo;
-  
+  final bool isExpanded;
+
   const SideMenu({
     super.key,
     required this.developerInfo,
+    this.isExpanded = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.darkBlue,
+      color: AppColors.cardBackground,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Аватарка
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              color: AppColors.background,
-              child: Image.network(
-                developerInfo.avatarUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Center(
-                    child: Text(
-                      developerInfo.name.substring(0, 1),
-                      style: AppTextStyles.h1.copyWith(fontSize: 72),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          
-          // Имя
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              developerInfo.name,
-              style: AppTextStyles.h3,
-            ),
-          ),
-          
-          // Меню навигации
-          const SizedBox(height: 20),
-          _buildMenuItem(
-            context: context, 
-            title: AppConstants.menuHome,
-            onTap: () => context.router.replace(const HomeRoute()),
-            isActive: context.router.current.name == 'HomeRoute',
-          ),
-          _buildMenuItem(
-            context: context, 
-            title: AppConstants.menuPortfolio,
-            onTap: () => context.router.replace(const PortfolioRoute()),
-            isActive: context.router.current.name == 'PortfolioRoute',
-          ),
-          _buildMenuItem(
-            context: context, 
-            title: AppConstants.menuContacts,
-            onTap: () => context.router.replace(const ContactsRoute()),
-            isActive: context.router.current.name == 'ContactsRoute',
-          ),
-          _buildMenuItem(
-            context: context, 
-            title: AppConstants.menuResume,
-            onTap: () => context.router.replace(const ResumeRoute()),
-            isActive: context.router.current.name == 'ResumeRoute',
-          ),
+          _buildHeader(context),
+          const SizedBox(height: 32),
+          _buildMenuItems(context),
         ],
       ),
     );
   }
-  
-  Widget _buildMenuItem({
-    required BuildContext context,
-    required String title,
-    required VoidCallback onTap,
-    bool isActive = false,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        color: isActive ? AppColors.cardBackground : Colors.transparent,
-        child: Row(
-          children: [
+
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: isExpanded ? 50 : 30,
+            backgroundImage: NetworkImage(developerInfo.avatarUrl),
+          ),
+          if (isExpanded) ...[
+            const SizedBox(height: 16),
             Text(
-              title,
-              style: isActive 
-                ? AppTextStyles.menu.copyWith(color: AppColors.accent)
-                : AppTextStyles.menu,
+              developerInfo.name,
+              style: AppTextStyles.h3,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              developerInfo.title,
+              style: AppTextStyles.body,
+              textAlign: TextAlign.center,
             ),
           ],
-        ),
+        ],
       ),
     );
   }
+
+  Widget _buildMenuItems(BuildContext context) {
+    final menuItems = [
+      _MenuItem(
+        icon: Icons.home_outlined,
+        label: AppConstants.menuHome,
+        route: const HomeRoute(),
+      ),
+      _MenuItem(
+        icon: Icons.person_outline,
+        label: AppConstants.menuAbout,
+        route: const AboutRoute(),
+      ),
+      _MenuItem(
+        icon: Icons.work_outline,
+        label: AppConstants.menuPortfolio,
+        route: const PortfolioRoute(),
+      ),
+      _MenuItem(
+        icon: Icons.contact_mail_outlined,
+        label: AppConstants.menuContacts,
+        route: const ContactsRoute(),
+      ),
+      _MenuItem(
+        icon: Icons.description_outlined,
+        label: AppConstants.menuResume,
+        route: const ResumeRoute(),
+      ),
+    ];
+
+    return Column(
+      children: menuItems.map((item) {
+        return _buildMenuItem(context, item);
+      }).toList(),
+    );
+  }
+
+  Widget _buildMenuItem(BuildContext context, _MenuItem item) {
+    final currentRoute = context.router.current;
+    final isSelected = currentRoute.name == item.route.routeName;
+
+    return ListTile(
+      leading: Icon(
+        item.icon,
+        color: isSelected ? AppColors.accent : AppColors.gray,
+      ),
+      title: isExpanded
+          ? Text(
+              item.label,
+              style: AppTextStyles.body.copyWith(
+                color: isSelected ? AppColors.accent : AppColors.gray,
+              ),
+            )
+          : null,
+      selected: isSelected,
+      onTap: () => _handleNavigation(context, item, currentRoute),
+    );
+  }
+
+  void _handleNavigation(BuildContext context, _MenuItem item, RouteData currentRoute) {
+    if (currentRoute.name == item.route.routeName) return;
+    
+    context.router.push(item.route);
+  }
+}
+
+class _MenuItem {
+  final IconData icon;
+  final String label;
+  final PageRouteInfo route;
+
+  const _MenuItem({
+    required this.icon,
+    required this.label,
+    required this.route,
+  });
 } 

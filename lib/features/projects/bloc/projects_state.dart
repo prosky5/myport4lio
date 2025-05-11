@@ -1,31 +1,49 @@
 import 'package:equatable/equatable.dart';
 import 'package:myport4lio/core/models/project.dart';
 
-enum ProjectsStatus { initial, loading, loaded, error }
+sealed class ProjectsState extends Equatable {
+  const ProjectsState();
 
-class ProjectsState extends Equatable {
-  final ProjectsStatus status;
-  final List<Project> projects;
-  final String? errorMessage;
-  
-  const ProjectsState({
-    this.status = ProjectsStatus.initial,
-    this.projects = const [],
-    this.errorMessage,
-  });
-  
   @override
-  List<Object?> get props => [status, projects, errorMessage];
-  
-  ProjectsState copyWith({
-    ProjectsStatus? status,
-    List<Project>? projects,
-    String? errorMessage,
+  List<Object?> get props => [];
+
+  T when<T>({
+    required T Function() initial,
+    required T Function() loading,
+    required T Function(List<Project> projects) loaded,
+    required T Function(String message) error,
   }) {
-    return ProjectsState(
-      status: status ?? this.status,
-      projects: projects ?? this.projects,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
+    return switch (this) {
+      ProjectsInitial() => initial(),
+      ProjectsLoading() => loading(),
+      ProjectsLoaded(projects: final projects) => loaded(projects),
+      ProjectsError(message: final msg) => error(msg),
+    };
   }
+}
+
+class ProjectsInitial extends ProjectsState {
+  const ProjectsInitial();
+}
+
+class ProjectsLoading extends ProjectsState {
+  const ProjectsLoading();
+}
+
+class ProjectsLoaded extends ProjectsState {
+  final List<Project> projects;
+
+  const ProjectsLoaded(this.projects);
+
+  @override
+  List<Object?> get props => [projects];
+}
+
+class ProjectsError extends ProjectsState {
+  final String message;
+
+  const ProjectsError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 } 

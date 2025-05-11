@@ -5,7 +5,8 @@ abstract class AppConstants {
   static const String developerLocation = 'Санкт-Петербург, Россия';
   
   // Разделы меню
-  static const String menuHome = 'ОБО МНЕ';
+  static const String menuHome = 'ГЛАВНАЯ';
+  static const String menuAbout = 'ОБО МНЕ';
   static const String menuPortfolio = 'ПОРТФОЛИО';
   static const String menuContacts = 'КОНТАКТЫ';
   static const String menuResume = 'РЕЗЮМЕ';
