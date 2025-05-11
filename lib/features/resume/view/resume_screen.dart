@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myport4lio/core/constants/app_colors.dart';
 import 'package:myport4lio/core/constants/app_constants.dart';
 import 'package:myport4lio/core/constants/app_text_styles.dart';
+import 'package:myport4lio/core/presentation/widgets/error_view.dart';
 import 'package:myport4lio/features/developer/bloc/developer_bloc.dart';
 import 'package:myport4lio/features/developer/bloc/developer_state.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,24 +36,9 @@ class ResumeScreen extends StatelessWidget {
               ),
             ),
             loaded: (developerInfo) => _buildContent(context, developerInfo),
-            error: (message) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    message,
-                    style: AppTextStyles.body,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<DeveloperBloc>().add(const LoadDeveloperInfo());
-                    },
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
+            error: (message) => ErrorView(
+              message: message,
+              onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
             ),
           );
         },
@@ -62,67 +48,77 @@ class ResumeScreen extends StatelessWidget {
 
   Widget _buildContent(BuildContext context, DeveloperInfo developerInfo) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppConstants.menuResume,
-              style: AppTextStyles.h1,
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () => _downloadResume(developerInfo.resumeUrl),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accent,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
+      padding: const EdgeInsets.all(32.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            AppConstants.menuResume,
+            style: AppTextStyles.h1,
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton.icon(
+            onPressed: () => _downloadResume(developerInfo.resumeUrl),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.accent,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 16,
               ),
-              icon: const Icon(Icons.download),
-              label: const Text('Скачать резюме'),
             ),
-            const SizedBox(height: 48),
-            Text(
-              AppConstants.experience,
-              style: AppTextStyles.h2,
-            ),
-            const SizedBox(height: 24),
-            // TODO: Replace with actual experience data
-            // ...developerInfo.experience.map((exp) => _buildExperienceItem(exp)),
-          ],
-        ),
+            icon: const Icon(Icons.download),
+            label: const Text('Скачать резюме'),
+          ),
+          const SizedBox(height: 48),
+          Text(
+            AppConstants.experience,
+            style: AppTextStyles.h2,
+          ),
+          const SizedBox(height: 24),
+          // ...developerInfo.experience.map((exp) => _buildExperienceItem(exp)),
+          const SizedBox(height: 32),
+          Text(
+            AppConstants.education,
+            style: AppTextStyles.h2,
+          ),
+          const SizedBox(height: 16),
+          // ...developerInfo.education.map((edu) => _buildEducationItem(edu)),
+        ],
       ),
     );
   }
 
   // Widget _buildExperienceItem(Experience experience) {
   //   return Padding(
-  //     padding: const EdgeInsets.only(bottom: 32.0),
+  //     padding: const EdgeInsets.only(bottom: 24.0),
   //     child: Column(
   //       crossAxisAlignment: CrossAxisAlignment.start,
   //       children: [
-  //         Text(
-  //           experience.position,
-  //           style: AppTextStyles.h3,
-  //         ),
-  //         const SizedBox(height: 8),
-  //         Text(
-  //           experience.company,
-  //           style: AppTextStyles.subtitle,
-  //         ),
+  //         Text(experience.company, style: AppTextStyles.h3),
   //         const SizedBox(height: 4),
-  //         Text(
-  //           '${experience.startDate} - ${experience.endDate}',
-  //           style: AppTextStyles.bodySecondary,
-  //         ),
-  //         const SizedBox(height: 16),
-  //         Text(
-  //           experience.description,
-  //           style: AppTextStyles.body,
-  //         ),
+  //         Text(experience.position, style: AppTextStyles.body),
+  //         const SizedBox(height: 4),
+  //         Text('${experience.startDate} - ${experience.endDate}',
+  //           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+  //         const SizedBox(height: 8),
+  //         Text(experience.description, style: AppTextStyles.body),
+  //       ],
+  //     ),
+  //   );
+  // }
+  //
+  // Widget _buildEducationItem(Education education) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(bottom: 24.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(education.institution, style: AppTextStyles.h3),
+  //         const SizedBox(height: 4),
+  //         Text(education.degree, style: AppTextStyles.body),
+  //         const SizedBox(height: 4),
+  //         Text('${education.startDate} - ${education.endDate}',
+  //           style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
   //       ],
   //     ),
   //   );

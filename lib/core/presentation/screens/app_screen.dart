@@ -6,6 +6,7 @@ import 'package:myport4lio/features/developer/bloc/developer_bloc.dart';
 import 'package:myport4lio/features/developer/bloc/developer_state.dart';
 import 'package:myport4lio/features/home/widgets/side_menu.dart';
 
+import '../../../features/developer/bloc/developer_event.dart';
 import '../../models/developer_info.dart';
 
 @RoutePage()
@@ -20,6 +21,12 @@ class AppScreen extends StatefulWidget {
 
 class _AppScreenState extends State<AppScreen> {
   bool _isMenuExpanded = true;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<DeveloperBloc>().add(const LoadDeveloperInfo());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +71,7 @@ class _AppScreenState extends State<AppScreen> {
                 top: 20,
                 child: IconButton(
                   icon: Icon(
-                    _isMenuExpanded
-                        ? Icons.chevron_left
-                        : Icons.chevron_right,
+                    _isMenuExpanded ? Icons.chevron_left : Icons.chevron_right,
                     color: AppColors.accent,
                   ),
                   onPressed: () {

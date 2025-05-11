@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myport4lio/core/constants/app_colors.dart';
 import 'package:myport4lio/core/constants/app_text_styles.dart';
+import 'package:myport4lio/core/presentation/widgets/error_view.dart';
 import 'package:myport4lio/features/developer/bloc/developer_bloc.dart';
 import 'package:myport4lio/features/developer/bloc/developer_state.dart';
+import 'package:myport4lio/features/developer/bloc/developer_event.dart';
 
 import '../../../core/models/developer_info.dart';
-import '../../developer/bloc/developer_event.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
@@ -22,31 +23,12 @@ class HomeScreen extends StatelessWidget {
           return state.when(
             initial: () => const SizedBox.shrink(),
             loading: () => const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.accent,
-              ),
+              child: CircularProgressIndicator(color: AppColors.accent),
             ),
             loaded: (developerInfo) => _buildContent(context, developerInfo),
-            error: (message) => Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    message,
-                    style: AppTextStyles.body,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context
-                          .read<DeveloperBloc>()
-                          .add(const LoadDeveloperInfo());
-                    },
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
+            error: (message) => ErrorView(
+              message: message,
+              onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
             ),
           );
         },
@@ -60,25 +42,13 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'welcome',
-            style: AppTextStyles.h1,
-          ),
+          Text('welcome', style: AppTextStyles.h1),
           const SizedBox(height: 16),
-          Text(
-            developerInfo.name,
-            style: AppTextStyles.h2,
-          ),
+          Text(developerInfo.name, style: AppTextStyles.h2),
           const SizedBox(height: 8),
-          Text(
-            developerInfo.title,
-            style: AppTextStyles.h3,
-          ),
+          Text(developerInfo.title, style: AppTextStyles.h3),
           const SizedBox(height: 24),
-          Text(
-            developerInfo.about,
-            style: AppTextStyles.body,
-          ),
+          Text(developerInfo.about, style: AppTextStyles.body),
         ],
       ),
     );

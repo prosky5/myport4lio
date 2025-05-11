@@ -16,7 +16,8 @@ abstract class AppConstants {
   static const String skills = 'ТЕХНИЧЕСКИЕ НАВЫКИ';
   static const String softSkills = 'СОФТ НАВЫКИ';
   static const String experience = 'ОПЫТ РАБОТЫ';
-  
+  static const String education = 'ОБРАЗОВАНИЕ';
+
   // Ссылки
   static const String gitHubUrl = 'https://github.com/prosky5';
   static const String linkedInUrl = 'https://linkedin.com/in/prosky5';
