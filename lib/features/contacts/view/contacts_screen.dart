@@ -17,7 +17,7 @@ class ContactsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.cardBackground,
+      color: AppColors.background,
       child: BlocBuilder<DeveloperBloc, DeveloperState>(
         builder: (context, state) {
           return state.when(
@@ -28,7 +28,8 @@ class ContactsScreen extends StatelessWidget {
             loaded: (developerInfo) => _buildContent(context, developerInfo),
             error: (message) => ErrorView(
               message: message,
-              onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
+              onRetry: () =>
+                  context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
             ),
           );
         },
@@ -42,52 +43,62 @@ class ContactsScreen extends StatelessWidget {
     final String telegram = developerInfo.contacts["telegram"] ?? '';
     final String github = developerInfo.contacts["github"] ?? '';
 
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Контакты',
-            style: AppTextStyles.h1,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Контакты',
+                style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary),
+              ),
+              const SizedBox(height: 32),
+              if (email.isNotEmpty)
+                _buildContactItem(
+                  context,
+                  Icons.email,
+                  'Email',
+                  email,
+                  'mailto:$email',
+                  AppColors.accent,
+                ),
+              const SizedBox(height: 16),
+              if (phone.isNotEmpty)
+                _buildContactItem(
+                  context,
+                  Icons.phone,
+                  'Телефон',
+                  phone,
+                  'tel:$phone',
+                  AppColors.accent,
+                ),
+              const SizedBox(height: 16),
+              if (telegram.isNotEmpty)
+                _buildContactItem(
+                  context,
+                  Icons.telegram,
+                  'Telegram',
+                  telegram,
+                  'https://t.me/$telegram',
+                  AppColors.accent2,
+                ),
+              const SizedBox(height: 16),
+              if (github.isNotEmpty)
+                _buildContactItem(
+                  context,
+                  Icons.code,
+                  'GitHub',
+                  github,
+                  'https://github.com/$github',
+                  AppColors.accent2,
+                ),
+            ],
           ),
-          const SizedBox(height: 32),
-          if (email.isNotEmpty)
-            _buildContactItem(
-              context,
-              Icons.email,
-              'Email',
-              email,
-              'mailto:$email',
-            ),
-          const SizedBox(height: 16),
-          if (phone.isNotEmpty)
-            _buildContactItem(
-              context,
-              Icons.phone,
-              'Телефон',
-              phone,
-              'tel:$phone',
-            ),
-          const SizedBox(height: 16),
-          if (telegram.isNotEmpty)
-            _buildContactItem(
-              context,
-              Icons.telegram,
-              'Telegram',
-              telegram,
-              'https://t.me/$telegram',
-            ),
-          const SizedBox(height: 16),
-          if (github.isNotEmpty)
-            _buildContactItem(
-              context,
-              Icons.code,
-              'GitHub',
-              github,
-              'https://github.com/$github',
-            ),
-        ],
+        ),
       ),
     );
   }
@@ -98,41 +109,46 @@ class ContactsScreen extends StatelessWidget {
     String title,
     String value,
     String url,
+    Color iconColor,
   ) {
-    return InkWell(
-      onTap: () {
-        // TODO: Implement URL launcher
-      },
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: AppColors.accent,
-            size: 24,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.bodySecondary,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: AppTextStyles.body,
-                ),
-              ],
+    return Material(
+      child: InkWell(
+        onTap: () {
+          // TODO: Implement URL launcher
+        },
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: iconColor,
+              size: 26,
             ),
-          ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: AppColors.accent,
-            size: 16,
-          ),
-        ],
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.bodySecondary
+                        .copyWith(color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    value,
+                    style: AppTextStyles.body
+                        .copyWith(color: AppColors.textPrimary),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: AppColors.gray,
+              size: 16,
+            ),
+          ],
+        ),
       ),
     );
   }

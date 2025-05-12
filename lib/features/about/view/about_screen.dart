@@ -17,7 +17,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.cardBackground,
+      color: AppColors.background,
       child: BlocBuilder<DeveloperBloc, DeveloperState>(
         builder: (context, state) {
           return state.when(
@@ -28,7 +28,8 @@ class AboutScreen extends StatelessWidget {
             loaded: (developerInfo) => _buildContent(context, developerInfo),
             error: (message) => ErrorView(
               message: message,
-              onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
+              onRetry: () =>
+                  context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
             ),
           );
         },
@@ -37,43 +38,53 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, DeveloperInfo developerInfo) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Обо мне',
-              style: AppTextStyles.h1,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              developerInfo.about,
-              style: AppTextStyles.body,
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'Навыки',
-              style: AppTextStyles.h2,
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: developerInfo.skills.map((skill) {
-                return Chip(
-                  label: Text(skill.name),
-                  backgroundColor: AppColors.accent.withOpacity(0.1),
-                  labelStyle: AppTextStyles.body.copyWith(
-                    color: AppColors.accent,
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Обо мне',
+                style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                developerInfo.about,
+                style:
+                    AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 32),
+              Text(
+                'Навыки',
+                style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: developerInfo.skills.map((skill) {
+                  return Material(
+                    child: Chip(
+                      label: Text(skill.name),
+                      backgroundColor: AppColors.accent.withOpacity(0.08),
+                      labelStyle: AppTextStyles.body.copyWith(
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-} 
+}

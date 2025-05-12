@@ -125,11 +125,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: const ColorScheme.dark(
             primary: AppColors.accent,
-            secondary: AppColors.secondary,
-            background: AppColors.background,
+            secondary: AppColors.accent2,
+            // background: AppColors.background,
             surface: AppColors.cardBackground,
           ),
-          scaffoldBackgroundColor: AppColors.background,
+          scaffoldBackgroundColor: AppColors.cardBackground,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           useMaterial3: true,
         ),

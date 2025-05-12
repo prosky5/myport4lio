@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.cardBackground,
+      color: AppColors.background,
       child: BlocBuilder<DeveloperBloc, DeveloperState>(
         builder: (context, state) {
           return state.when(
@@ -37,18 +37,19 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, DeveloperInfo developerInfo) {
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
+      padding: const EdgeInsets.all(48.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('welcome', style: AppTextStyles.h1),
-          const SizedBox(height: 16),
-          Text(developerInfo.name, style: AppTextStyles.h2),
+          // Text('welcome', style: AppTextStyles.h1),
+          Text(developerInfo.name, style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary)),
           const SizedBox(height: 8),
-          Text(developerInfo.title, style: AppTextStyles.h3),
+          Text(developerInfo.title, style: AppTextStyles.h3.copyWith(color: AppColors.accent)),
           const SizedBox(height: 24),
-          Text(developerInfo.about, style: AppTextStyles.body),
+          Text(developerInfo.about, style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
         ],
       ),
     );

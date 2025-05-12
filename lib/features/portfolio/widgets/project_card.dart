@@ -21,8 +21,15 @@ class ProjectCard extends StatelessWidget {
       onTap: () => context.router.push(ProjectDetailsRoute(projectId: project.id.toString())),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(8),
+          gradient: AppColors.cardGradient,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.gray.withOpacity(0.10),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -30,24 +37,30 @@ class ProjectCard extends StatelessWidget {
           children: [
             Expanded(
               flex: 2,
-              child: CachedNetworkImage(
-                imageUrl: project.imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                placeholder: (context, url) => Container(
-                  color: AppColors.darkBlue,
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.accent,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(18),
+                  topRight: Radius.circular(18),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: project.imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  placeholder: (context, url) => Container(
+                    color: AppColors.beige,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.accent2,
+                      ),
                     ),
                   ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  color: AppColors.darkBlue,
-                  child: Center(
-                    child: Text(
-                      project.title.substring(0, 1),
-                      style: AppTextStyles.h1,
+                  errorWidget: (context, url, error) => Container(
+                    color: AppColors.beige,
+                    child: Center(
+                      child: Text(
+                        project.title.substring(0, 1),
+                        style: AppTextStyles.h1.copyWith(color: AppColors.accent),
+                      ),
                     ),
                   ),
                 ),
@@ -56,7 +69,7 @@ class ProjectCard extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,14 +79,14 @@ class ProjectCard extends StatelessWidget {
                       children: [
                         Text(
                           project.title,
-                          style: AppTextStyles.h3,
+                          style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           project.description ?? "",
-                          style: AppTextStyles.bodySecondary,
+                          style: AppTextStyles.bodySecondary.copyWith(color: AppColors.textSecondary),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -94,22 +107,23 @@ class ProjectCard extends StatelessWidget {
           ],
         ),
       ).animate()
-       .fadeIn(duration: const Duration(milliseconds: 500))
-       .slide(begin: const Offset(0, 0.1), duration: const Duration(milliseconds: 300)),
+       .fadeIn(duration: const Duration(milliseconds: 600))
+       .slide(begin: const Offset(0, 0.08), duration: const Duration(milliseconds: 500)),
     );
   }
 
   Widget _buildTechChip(String tech) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(4),
+        color: AppColors.accent.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         tech,
         style: AppTextStyles.menu.copyWith(
           color: AppColors.accent,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

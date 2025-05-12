@@ -3,7 +3,7 @@ import 'package:myport4lio/core/repositories/base_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DeveloperRepository extends BaseRepository {
-  DeveloperRepository({required SupabaseClient client}) : super(client: client);
+  DeveloperRepository({required super.client});
   
   Future<DeveloperInfo> getDeveloperInfo() async {
     return safeCall(

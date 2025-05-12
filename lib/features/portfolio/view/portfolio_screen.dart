@@ -18,7 +18,7 @@ class PortfolioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.cardBackground,
+      color: AppColors.background,
       child: BlocBuilder<ProjectsBloc, ProjectsState>(
         builder: (context, state) {
           return state.when(
@@ -55,19 +55,29 @@ class PortfolioScreen extends StatelessWidget {
   }
 
   Widget _buildProjectCard(BuildContext context, Project project) {
-    return Card(
-      color: AppColors.cardBackground,
-      child: InkWell(
-        onTap: () => context.router.push(ProjectDetailsRoute(projectId: "${project.id}")),
+    return InkWell(
+      onTap: () => context.router.push(ProjectDetailsRoute(projectId: "${project.id}")),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.cardGradient,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.gray.withOpacity(0.10),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(project.title, style: AppTextStyles.h3),
+              Text(project.title, style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
               const SizedBox(height: 8),
               Text(project.description ?? "-",
-                style: AppTextStyles.body,
+                style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -78,8 +88,8 @@ class PortfolioScreen extends StatelessWidget {
                 children: project.technologies.map((tech) {
                   return Chip(
                     label: Text(tech),
-                    backgroundColor: AppColors.accent.withOpacity(0.1),
-                    labelStyle: AppTextStyles.body.copyWith(color: AppColors.accent),
+                    backgroundColor: AppColors.accent.withOpacity(0.08),
+                    labelStyle: AppTextStyles.body.copyWith(color: AppColors.accent, fontWeight: FontWeight.w600),
                   );
                 }).toList(),
               ),

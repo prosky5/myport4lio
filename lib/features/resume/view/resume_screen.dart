@@ -25,7 +25,7 @@ class ResumeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.cardBackground,
+      color: AppColors.background,
       child: BlocBuilder<DeveloperBloc, DeveloperState>(
         builder: (context, state) {
           return state.when(
@@ -47,43 +47,52 @@ class ResumeScreen extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, DeveloperInfo developerInfo) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppConstants.menuResume,
-            style: AppTextStyles.h1,
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: () => _downloadResume(developerInfo.resumeUrl),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 16,
-              ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppConstants.menuResume,
+              style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary),
             ),
-            icon: const Icon(Icons.download),
-            label: const Text('Скачать резюме'),
-          ),
-          const SizedBox(height: 48),
-          Text(
-            AppConstants.experience,
-            style: AppTextStyles.h2,
-          ),
-          const SizedBox(height: 24),
-          // ...developerInfo.experience.map((exp) => _buildExperienceItem(exp)),
-          const SizedBox(height: 32),
-          Text(
-            AppConstants.education,
-            style: AppTextStyles.h2,
-          ),
-          const SizedBox(height: 16),
-          // ...developerInfo.education.map((edu) => _buildEducationItem(edu)),
-        ],
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () => _downloadResume(developerInfo.resumeUrl),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 28,
+                  vertical: 18,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+              icon: const Icon(Icons.download),
+              label: const Text('Скачать резюме'),
+            ),
+            const SizedBox(height: 48),
+            Text(
+              AppConstants.experience,
+              style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+            ),
+            const SizedBox(height: 24),
+            // ...developerInfo.experience.map((exp) => _buildExperienceItem(exp)),
+            const SizedBox(height: 32),
+            Text(
+              AppConstants.education,
+              style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+            ),
+            const SizedBox(height: 16),
+            // ...developerInfo.education.map((edu) => _buildEducationItem(edu)),
+          ],
+        ),
       ),
     );
   }

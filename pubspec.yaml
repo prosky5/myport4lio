@@ -53,7 +53,7 @@ dependencies:
   cached_network_image: ^3.3.1
   google_fonts: ^6.2.1
   auto_route: ^7.8.4
-  responsive_framework: ^1.4.0
+  responsive_framework: ^1.5.1
   flutter_animate: ^4.5.0
   font_awesome_flutter: ^10.8.0
   sidebarx: ^0.17.1
