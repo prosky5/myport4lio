@@ -24,25 +24,22 @@ class ResumeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.background,
-      child: BlocBuilder<DeveloperBloc, DeveloperState>(
-        builder: (context, state) {
-          return state.when(
-            initial: () => const SizedBox.shrink(),
-            loading: () => const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.accent,
-              ),
+    return BlocBuilder<DeveloperBloc, DeveloperState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => const SizedBox.shrink(),
+          loading: () => const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.accent,
             ),
-            loaded: (developerInfo) => _buildContent(context, developerInfo),
-            error: (message) => ErrorView(
-              message: message,
-              onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
-            ),
-          );
-        },
-      ),
+          ),
+          loaded: (developerInfo) => _buildContent(context, developerInfo),
+          error: (message) => ErrorView(
+            message: message,
+            onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
+          ),
+        );
+      },
     );
   }
 

@@ -24,21 +24,25 @@ class SideMenu extends StatelessWidget {
     return SidebarX(
       controller: controller,
       theme: SidebarXTheme(
-        // margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(24),
+          // color: AppColors.cardBackground,
+          gradient: AppColors.bluePurpGradient,
+          borderRadius: const BorderRadius.all(Radius.circular(16)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.gray.withOpacity(0.08),
-              blurRadius: 24,
+              color: AppColors.accent.withValues(alpha: 0.58),
+              blurRadius: 20,
               offset: const Offset(0, 8),
             ),
           ],
         ),
-        hoverColor: AppColors.accent.withOpacity(0.08),
+        hoverColor: AppColors.white.withValues(alpha: 0.3),
         textStyle: AppTextStyles.body.copyWith(color: AppColors.textPrimary),
-        selectedTextStyle: AppTextStyles.body.copyWith(color: AppColors.accent2, fontWeight: FontWeight.bold),
+        selectedTextStyle: AppTextStyles.body
+            .copyWith(color: AppColors.accent, fontWeight: FontWeight.bold),
+        hoverTextStyle: AppTextStyles.body
+            .copyWith(color: AppColors.accent2, fontWeight: FontWeight.bold),
         itemTextPadding: const EdgeInsets.only(left: 32),
         selectedItemTextPadding: const EdgeInsets.only(left: 32),
         itemDecoration: BoxDecoration(
@@ -46,31 +50,49 @@ class SideMenu extends StatelessWidget {
         ),
         selectedItemDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          gradient: AppColors.blueGoldGradient,
+          gradient: AppColors.purpTransGradient,
           boxShadow: [
             BoxShadow(
-              color: AppColors.accent2.withOpacity(0.10),
-              blurRadius: 12,
+              color: AppColors.accent2.withValues(alpha: 0.10),
+              blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
         ),
         iconTheme: const IconThemeData(
-          color: AppColors.accent,
+          color: AppColors.blue,
           size: 22,
         ),
         selectedIconTheme: const IconThemeData(
           color: AppColors.accent2,
-          size: 24,
+          size: 22,
         ),
       ),
       extendedTheme: const SidebarXTheme(
         width: 220,
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-        ),
+            borderRadius: BorderRadius.horizontal(right: Radius.circular(16)),
+            // color: AppColors.cardBackground,
+            gradient: AppColors.bluePurpGradient),
       ),
       footerDivider: divider,
+      toggleButtonBuilder: (context, extended) {
+        return InkWell(
+          onTap: () => controller.toggleExtended(),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            width: double.infinity,
+            child: IconButton(
+              onPressed: null,
+              icon: Icon(
+                extended ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
+                color: AppColors.blue,
+              ),
+              alignment: Alignment.bottomLeft,
+            ),
+          ),
+        );
+      },
       footerBuilder: (context, extended) {
         return _buildFooter(context, extended);
       },
@@ -79,23 +101,27 @@ class SideMenu extends StatelessWidget {
   }
 
   Widget _buildFooter(BuildContext context, bool extended) {
+    final fullname = developerInfo.name.split(' ');
+    final fulltitle = developerInfo.title.split(' ');
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (extended) ...[
             const SizedBox(height: 16),
             Text(
-              developerInfo.name,
+              "${fullname[1]} ${fullname[0].substring(0, 1)}.",
               style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
             ),
             const SizedBox(height: 8),
             Text(
-              developerInfo.title,
-              style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
-              textAlign: TextAlign.center,
+              "${fulltitle[0]} ${fulltitle[1]}",
+              style:
+                  AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+              textAlign: TextAlign.start,
             ),
           ],
         ],
@@ -140,7 +166,7 @@ class SideMenu extends StatelessWidget {
   }
 
   Widget get divider => const Divider(
-    color: AppColors.gray,
-    height: 1,
-  );
-} 
+        color: AppColors.blue,
+        height: .5,
+      );
+}

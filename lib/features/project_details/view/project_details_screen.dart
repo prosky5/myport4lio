@@ -103,7 +103,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                   width: double.infinity,
                   height: 400,
                   placeholder: (context, url) => Container(
-                    color: AppColors.beige,
+                    color: AppColors.cardBackground,
                     height: 400,
                     child: const Center(
                       child: CircularProgressIndicator(
@@ -112,7 +112,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     ),
                   ),
                   errorWidget: (context, url, error) => Container(
-                    color: AppColors.beige,
+                    color: AppColors.cardBackground,
                     height: 400,
                     child: Center(
                       child: Text(

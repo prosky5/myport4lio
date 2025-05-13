@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
     Bloc.observer = AppBlocObserver();
   }
 
-  final _appRouter = AppRouter();
+  final appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class MyApp extends StatelessWidget {
             // background: AppColors.background,
             surface: AppColors.cardBackground,
           ),
-          scaffoldBackgroundColor: AppColors.cardBackground,
+          scaffoldBackgroundColor: AppColors.background,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           useMaterial3: true,
         ),
@@ -142,7 +142,7 @@ class MyApp extends StatelessWidget {
             const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
           ],
         ),
-        routerConfig: _appRouter.config(),
+        routerConfig: appRouter.config(),
         debugShowCheckedModeBanner: false,
       ),
     );

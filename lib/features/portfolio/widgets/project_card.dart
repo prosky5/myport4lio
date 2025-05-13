@@ -47,7 +47,7 @@ class ProjectCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: double.infinity,
                   placeholder: (context, url) => Container(
-                    color: AppColors.beige,
+                    color: AppColors.cardBackground,
                     child: const Center(
                       child: CircularProgressIndicator(
                         color: AppColors.accent2,
@@ -55,7 +55,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ),
                   errorWidget: (context, url, error) => Container(
-                    color: AppColors.beige,
+                    color: AppColors.cardBackground,
                     child: Center(
                       child: Text(
                         project.title.substring(0, 1),

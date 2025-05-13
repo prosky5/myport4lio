@@ -12,28 +12,36 @@ import '../../../core/models/project.dart';
 import '../../../routes/app_router.dart';
 
 @RoutePage()
-class PortfolioScreen extends StatelessWidget {
+class PortfolioScreen extends StatefulWidget {
   const PortfolioScreen({super.key});
 
   @override
+  State<PortfolioScreen> createState() => _PortfolioScreenState();
+}
+
+class _PortfolioScreenState extends State<PortfolioScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProjectsBloc>().add(LoadProjects());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.background,
-      child: BlocBuilder<ProjectsBloc, ProjectsState>(
-        builder: (context, state) {
-          return state.when(
-            initial: () => const SizedBox.shrink(),
-            loading: () => const Center(
-              child: CircularProgressIndicator(color: AppColors.accent),
-            ),
-            loaded: (projects) => _buildContent(context, projects),
-            error: (message) => ErrorView(
-              message: message,
-              onRetry: () => context.read<ProjectsBloc>().add(LoadProjects()),
-            ),
-          );
-        },
-      ),
+    return BlocBuilder<ProjectsBloc, ProjectsState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => const SizedBox.shrink(),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.accent),
+          ),
+          loaded: (projects) => _buildContent(context, projects),
+          error: (message) => ErrorView(
+            message: message,
+            onRetry: () => context.read<ProjectsBloc>().add(LoadProjects()),
+          ),
+        );
+      },
     );
   }
 
@@ -56,7 +64,8 @@ class PortfolioScreen extends StatelessWidget {
 
   Widget _buildProjectCard(BuildContext context, Project project) {
     return InkWell(
-      onTap: () => context.router.push(ProjectDetailsRoute(projectId: "${project.id}")),
+      onTap: () =>
+          context.router.push(ProjectDetailsRoute(projectId: "${project.id}")),
       child: Container(
         decoration: BoxDecoration(
           gradient: AppColors.cardGradient,
@@ -74,10 +83,14 @@ class PortfolioScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(project.title, style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
+              Text(project.title,
+                  style:
+                      AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
               const SizedBox(height: 8),
-              Text(project.description ?? "-",
-                style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+              Text(
+                project.description ?? "-",
+                style:
+                    AppTextStyles.body.copyWith(color: AppColors.textSecondary),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -89,7 +102,8 @@ class PortfolioScreen extends StatelessWidget {
                   return Chip(
                     label: Text(tech),
                     backgroundColor: AppColors.accent.withOpacity(0.08),
-                    labelStyle: AppTextStyles.body.copyWith(color: AppColors.accent, fontWeight: FontWeight.w600),
+                    labelStyle: AppTextStyles.body.copyWith(
+                        color: AppColors.accent, fontWeight: FontWeight.w600),
                   );
                 }).toList(),
               ),

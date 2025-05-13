@@ -16,23 +16,20 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.background,
-      child: BlocBuilder<DeveloperBloc, DeveloperState>(
-        builder: (context, state) {
-          return state.when(
-            initial: () => const SizedBox.shrink(),
-            loading: () => const Center(
-              child: CircularProgressIndicator(color: AppColors.accent),
-            ),
-            loaded: (developerInfo) => _buildContent(context, developerInfo),
-            error: (message) => ErrorView(
-              message: message,
-              onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
-            ),
-          );
-        },
-      ),
+    return BlocBuilder<DeveloperBloc, DeveloperState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => const SizedBox.shrink(),
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.accent),
+          ),
+          loaded: (developerInfo) => _buildContent(context, developerInfo),
+          error: (message) => ErrorView(
+            message: message,
+            onRetry: () => context.read<DeveloperBloc>().add(const LoadDeveloperInfo()),
+          ),
+        );
+      },
     );
   }
 
@@ -45,11 +42,11 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Text('welcome', style: AppTextStyles.h1),
-          Text(developerInfo.name, style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary)),
-          const SizedBox(height: 8),
-          Text(developerInfo.title, style: AppTextStyles.h3.copyWith(color: AppColors.accent)),
-          const SizedBox(height: 24),
-          Text(developerInfo.about, style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+          // Text(developerInfo.name, style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary)),
+          // const SizedBox(height: 8),
+          // Text(developerInfo.title, style: AppTextStyles.h3.copyWith(color: AppColors.accent)),
+          // const SizedBox(height: 24),
+          // Text(developerInfo.about, style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
         ],
       ),
     );
