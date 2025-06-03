@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mesh_gradient/mesh_gradient.dart';
 import 'package:myport4lio/core/constants/app_colors.dart';
 import 'package:myport4lio/core/service_locator.dart';
+import 'package:myport4lio/features/about/view/credits.dart';
 import 'package:myport4lio/features/developer/bloc/developer_bloc.dart';
 import 'package:myport4lio/features/project_details/bloc/project_details_bloc.dart';
 import 'package:myport4lio/features/projects/bloc/projects_bloc.dart';
@@ -64,7 +67,8 @@ void main() async {
       // Здесь можно создать заглушку для репозиториев или использовать локальные данные
     }
 
-    runApp(MyApp());
+    // runApp(MyApp());
+    runApp(WIPAPP());
   }, (error, stackTrace) {
     // Логируем необработанные исключения
     developer.log(
@@ -144,6 +148,92 @@ class MyApp extends StatelessWidget {
         ),
         routerConfig: appRouter.config(),
         debugShowCheckedModeBanner: false,
+      ),
+    );
+  }
+}
+
+class WIPAPP extends StatelessWidget {
+  WIPAPP({super.key});
+
+  final AnimatedMeshGradientController _meshController =
+      AnimatedMeshGradientController();
+
+  void toggleAnimation() {
+    _meshController.isAnimating.value
+        ? _meshController.stop()
+        : _meshController.start();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    toggleAnimation();
+
+    return MaterialApp(
+      title: 'WIP App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        body: AnimatedMeshGradient(
+          colors: const [
+            AppColors.blue,
+            AppColors.blue2,
+            AppColors.purp,
+            AppColors.purp2,
+          ],
+          options: AnimatedMeshGradientOptions(),
+          controller: _meshController,
+          child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              IgnorePointer(
+                child: AnimatedContainer(
+                  alignment: Alignment.bottomCenter,
+                  width: MediaQuery.sizeOf(context).width * 0.25,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.decelerate,
+                  child: Image.asset(
+                    'assets/images/2.webp',
+                    colorBlendMode: BlendMode.darken,
+                    fit: BoxFit.fitHeight,
+                    // width: double.infinity,
+                    // height: double.infinity,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 80,
+              ),
+              const AutoSizeText(
+                'Ведутся технические работы!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const AutoSizeText(
+                '(Site under construction)',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColors.gray,
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              const Spacer(),
+              Credit()
+            ],
+          )),
+        ),
       ),
     );
   }

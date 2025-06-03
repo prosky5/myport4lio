@@ -4,18 +4,18 @@ class Project extends Equatable {
   final int id;
   final String title;
   final String? description;
-  final String imageUrl;
-  final String? category;
+  final String imagesUrl;
+  final String category;
   final List<String> technologies;
   final String detailText;
   final String? appUrl;
   final String? githubUrl;
-  
+
   const Project({
     required this.id,
     required this.title,
     required this.description,
-    required this.imageUrl,
+    required this.imagesUrl,
     required this.category,
     required this.technologies,
     required this.detailText,
@@ -28,12 +28,12 @@ class Project extends Equatable {
     id, 
     title, 
     description, 
-    imageUrl, 
+    imagesUrl,
     category, 
     technologies, 
     detailText, 
     appUrl, 
-    githubUrl
+    githubUrl,
   ];
   
   factory Project.fromJson(Map<String, dynamic> json) {
@@ -41,12 +41,12 @@ class Project extends Equatable {
       id: json['id'],
       title: json['title'] ?? '',
       description: json['description'] ?? '',
-      imageUrl: json['image_url'] ?? '',
+      imagesUrl: json['imagesUrl'] ?? '',
       category: json['category'] ?? '',
       technologies: List<String>.from(json['technologies'] ?? []),
-      detailText: json['detail_text'] ?? '',
-      appUrl: json['app_url'],
-      githubUrl: json['github_url'],
+      detailText: json['detailText'] ?? '',
+      appUrl: json['appUrl'],
+      githubUrl: json['githubUrl'],
     );
   }
   
@@ -55,12 +55,12 @@ class Project extends Equatable {
       'id': id,
       'title': title,
       'description': description,
-      'image_url': imageUrl,
+      'imagesUrl': imagesUrl,
       'category': category,
       'technologies': technologies,
-      'detail_text': detailText,
-      'app_url': appUrl,
-      'github_url': githubUrl,
+      'detailText': detailText,
+      'appUrl': appUrl,
+      'githubUrl': githubUrl,
     };
   }
 } 

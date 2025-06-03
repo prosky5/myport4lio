@@ -7,6 +7,7 @@ import 'package:myport4lio/core/constants/app_text_styles.dart';
 import 'package:myport4lio/core/presentation/widgets/error_view.dart';
 import 'package:myport4lio/features/developer/bloc/developer_bloc.dart';
 import 'package:myport4lio/features/developer/bloc/developer_state.dart';
+import 'package:myport4lio/features/resume/view/timeline_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/models/developer_info.dart';
@@ -75,17 +76,8 @@ class ResumeScreen extends StatelessWidget {
               label: const Text('Скачать резюме'),
             ),
             const SizedBox(height: 48),
-            Text(
-              AppConstants.experience,
-              style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
-            ),
-            const SizedBox(height: 24),
+            const TimelineScreen(),
             // ...developerInfo.experience.map((exp) => _buildExperienceItem(exp)),
-            const SizedBox(height: 32),
-            Text(
-              AppConstants.education,
-              style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
-            ),
             const SizedBox(height: 16),
             // ...developerInfo.education.map((edu) => _buildEducationItem(edu)),
           ],
@@ -129,4 +121,5 @@ class ResumeScreen extends StatelessWidget {
   //     ),
   //   );
   // }
+
 } 

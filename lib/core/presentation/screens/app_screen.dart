@@ -170,7 +170,7 @@ class _AppScreenState extends State<AppScreen>
                               : 1,
                           duration: animationDuration,
                           child: Image.asset(
-                            'assets/images/1.webp',
+                            'assets/images/2.webp',
                             colorBlendMode: BlendMode.darken,
                             fit: BoxFit.fitHeight,
                             // width: double.infinity,

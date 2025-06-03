@@ -3,6 +3,6 @@ class Assets {
   Assets._();
 
   static const String images1 = 'assets/images/1.webp';
-  static const String imagesMan = 'assets/images/man.png';
+  static const String images2 = 'assets/images/2.webp';
 
 }

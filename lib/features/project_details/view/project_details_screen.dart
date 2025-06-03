@@ -48,9 +48,14 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.background,
-      child: BlocBuilder<ProjectDetailsBloc, ProjectDetailsState>(
+    return
+      // Container(
+      // decoration: const BoxDecoration(
+      //   color: Colors.white,
+      //   gradient: AppColors.cardShadeGradient,
+      // ),
+      // child:
+      BlocBuilder<ProjectDetailsBloc, ProjectDetailsState>(
         builder: (context, state) {
           return state.when(
             initial: () => const SizedBox.shrink(),
@@ -66,11 +71,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
             ),
           );
         },
-      ),
+      // ),
     );
   }
 
   Widget _buildContent(BuildContext context, Project project) {
+    debugPrint("${project.imagesUrl}/cover.png");
     return AnimatedContainer(
       duration: const Duration(milliseconds: 600),
       curve: Curves.easeOutCubic,
@@ -79,9 +85,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(project.title, style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary)),
+            Text(project.title,
+                style: AppTextStyles.h1.copyWith(color: AppColors.textPrimary)),
             const SizedBox(height: 16),
-            Text(project.description ?? "-", style: AppTextStyles.body.copyWith(color: AppColors.textSecondary)),
+            Text(project.description ?? "-",
+                style: AppTextStyles.body
+                    .copyWith(color: AppColors.textSecondary)),
             const SizedBox(height: 32),
             Container(
               decoration: BoxDecoration(
@@ -98,7 +107,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: CachedNetworkImage(
-                  imageUrl: project.imageUrl,
+                  imageUrl: "${project.imagesUrl}/cover.png",
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 400,
@@ -117,7 +126,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     child: Center(
                       child: Text(
                         project.title.substring(0, 1),
-                        style: AppTextStyles.h1.copyWith(fontSize: 72, color: AppColors.accent),
+                        style: AppTextStyles.h1
+                            .copyWith(fontSize: 72, color: AppColors.accent),
                       ),
                     ),
                   ),
@@ -125,9 +135,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            Text(project.detailText, style: AppTextStyles.body.copyWith(color: AppColors.textPrimary)),
+            Text(project.detailText,
+                style:
+                    AppTextStyles.body.copyWith(color: AppColors.textPrimary)),
             const SizedBox(height: 32),
-            Text('Технологии', style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary)),
+            Text('Технологии',
+                style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary)),
             const SizedBox(height: 16),
             Wrap(
               spacing: 8,
@@ -162,7 +175,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     OutlinedButton(
                       onPressed: () => _launchUrl(project.githubUrl!),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.accent2, width: 2),
+                        side: const BorderSide(
+                            color: AppColors.accent2, width: 2),
                         foregroundColor: AppColors.accent2,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 24,
@@ -186,7 +200,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     return Chip(
       label: Text(
         tech,
-        style: AppTextStyles.body.copyWith(color: AppColors.accent, fontWeight: FontWeight.w600),
+        style: AppTextStyles.body
+            .copyWith(color: AppColors.accent, fontWeight: FontWeight.w600),
       ),
       backgroundColor: AppColors.accent.withOpacity(0.08),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

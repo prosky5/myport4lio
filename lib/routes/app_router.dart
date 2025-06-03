@@ -8,6 +8,8 @@ import 'package:myport4lio/features/portfolio/view/portfolio_screen.dart';
 import 'package:myport4lio/features/project_details/view/project_details_screen.dart';
 import 'package:myport4lio/features/resume/view/resume_screen.dart';
 
+import '../features/resume/view/timeline_screen.dart';
+
 part 'app_router.gr.dart';
 
 @AutoRouterConfig()

@@ -11,7 +11,8 @@ class DeveloperInfo extends Equatable {
   final List<String> softSkills;
   final Map<String, String> contacts;
   final String resumeUrl;
-  
+  final Map<String, dynamic> resumeJson;
+
   const DeveloperInfo({
     required this.name,
     required this.title,
@@ -22,6 +23,7 @@ class DeveloperInfo extends Equatable {
     required this.softSkills,
     required this.contacts,
     required this.resumeUrl,
+    required this.resumeJson,
   });
   
   @override
@@ -34,7 +36,8 @@ class DeveloperInfo extends Equatable {
     skills, 
     softSkills, 
     contacts, 
-    resumeUrl
+    resumeUrl,
+    resumeJson,
   ];
   
   factory DeveloperInfo.fromJson(Map<String, dynamic> json) {
@@ -50,6 +53,7 @@ class DeveloperInfo extends Equatable {
       softSkills: List<String>.from(json['soft_skills'] ?? []),
       contacts: Map<String, String>.from(json['contacts'] ?? {}),
       resumeUrl: json['resume_url'] ?? '',
+      resumeJson: json['resumeJson'] ?? '',
     );
   }
   
@@ -64,6 +68,7 @@ class DeveloperInfo extends Equatable {
       'soft_skills': softSkills,
       'contacts': contacts,
       'resume_url': resumeUrl,
+      'resumeJson': resumeJson,
     };
   }
 } 

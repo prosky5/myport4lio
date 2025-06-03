@@ -30,6 +30,12 @@ abstract class AppColors {
     end: Alignment.bottomRight,
   );
 
+  static const LinearGradient cardShadeGradient = LinearGradient(
+    colors: [purp2, Colors.transparent],
+    begin: FractionalOffset.topCenter,
+    end: FractionalOffset.bottomCenter,
+  );
+
   static const LinearGradient purpTransGradient = LinearGradient(
     colors: [purp, Colors.transparent],
     begin: Alignment.topLeft,

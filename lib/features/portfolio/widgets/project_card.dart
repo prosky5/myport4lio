@@ -18,97 +18,82 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.router.push(ProjectDetailsRoute(projectId: project.id.toString())),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: AppColors.cardGradient,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.gray.withOpacity(0.10),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 2,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(18),
-                  topRight: Radius.circular(18),
-                ),
-                child: CachedNetworkImage(
-                  imageUrl: project.imageUrl,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  placeholder: (context, url) => Container(
-                    color: AppColors.cardBackground,
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.accent2,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: AppColors.cardBackground,
-                    child: Center(
-                      child: Text(
-                        project.title.substring(0, 1),
-                        style: AppTextStyles.h1.copyWith(color: AppColors.accent),
-                      ),
-                    ),
-                  ),
-                ),
+      onTap: () =>
+          context.router.push(ProjectDetailsRoute(projectId: "${project.id}")),
+      child: CachedNetworkImage(
+        imageUrl: "${project.imagesUrl}/cover.png",
+        imageBuilder: (context, imageProvider) => Container(
+          width: double.infinity,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+            gradient: AppColors.cardGradient,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.gray.withOpacity(0.10),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
+            ],
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              gradient: AppColors.cardShadeGradient,
             ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          project.title,
-                          style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          project.description ?? "",
-                          style: AppTextStyles.bodySecondary.copyWith(color: AppColors.textSecondary),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: project.technologies
-                          .take(3)
-                          .map((tech) => _buildTechChip(tech))
-                          .toList(),
-                    ),
-                  ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(project.title,
+                    style: AppTextStyles.h3
+                        .copyWith(color: AppColors.textPrimary)),
+                const SizedBox(height: 8),
+                Text(
+                  project.description ?? "-",
+                  style: AppTextStyles.body
+                      .copyWith(color: AppColors.textSecondary),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
+                const Spacer(),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: project.technologies.map((tech) {
+                    return Chip(
+                      label: Text(tech),
+                      backgroundColor: AppColors.accent.withOpacity(0.08),
+                      labelStyle: AppTextStyles.body.copyWith(
+                          color: AppColors.accent, fontWeight: FontWeight.w600),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
-          ],
+          ),
+        ).animate().fadeIn(duration: const Duration(milliseconds: 600)).slide(
+            begin: const Offset(0.08, 0),
+            duration: const Duration(milliseconds: 500)),
+        placeholder: (context, url) => Container(
+          color: AppColors.cardBackground,
+          child: const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.accent2,
+            ),
+          ),
         ),
-      ).animate()
-       .fadeIn(duration: const Duration(milliseconds: 600))
-       .slide(begin: const Offset(0, 0.08), duration: const Duration(milliseconds: 500)),
+        errorWidget: (context, url, error) => Container(
+          color: AppColors.cardBackground,
+          child: Center(
+            child: Text(
+              project.title.substring(0, 1),
+              style: AppTextStyles.h1.copyWith(color: AppColors.accent),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -128,4 +113,4 @@ class ProjectCard extends StatelessWidget {
       ),
     );
   }
-} 
+}
